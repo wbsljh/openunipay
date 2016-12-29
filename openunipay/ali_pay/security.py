@@ -6,7 +6,8 @@ from openunipay.ali_pay import logger
 def sign(data):
     privateKey = _load_private_key(settings.ALIPAY['rsa_private_key_pem'])
     signBytes = rsa.sign(data.encode(), privateKey, 'SHA-1')
-    signStr = str(base64.b64encode(signBytes), 'utf-8')
+    #signStr = str(base64.b64encode(signBytes), 'utf-8')
+    signStr = str(base64.b64encode(signBytes)).encode('utf-8')
     return signStr
 
 def verify(data, sign, pemKeyfile):

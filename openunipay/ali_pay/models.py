@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.conf import settings
-from urllib.parse import quote_plus
+#from urllib.parse import quote_plus
+try:
+    from urllib.parse import quote_plus
+except ImportError:
+    from urllib import pathname2url as quote_plus
 from openunipay.ali_pay import security
 
 _SERVICE = 'mobile.securitypay.pay'
