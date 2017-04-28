@@ -14,6 +14,7 @@ PAY_WAY = ((PAY_WAY_WEIXIN, u'微信支付'), (PAY_WAY_ALI, u'支付宝支付'),
 class OrderItem(models.Model):
     orderno = models.CharField(verbose_name=u'订单号', max_length=50, primary_key=True, editable=False)
     user = models.CharField(verbose_name=u'用户标识', max_length=50, null=True, blank=True)
+    user_to = models.CharField(verbose_name=u'对手方用户标识', max_length=50, null=True, blank=True)
     product_desc = models.CharField(verbose_name=u'商品描述', max_length=128, null=False, blank=False)
     product_detail = models.TextField(verbose_name=u'商品详情', max_length=1000, null=False, blank=False)
     fee = models.DecimalField(verbose_name=u'金额(单位:分)', max_digits=6, decimal_places=0, null=False, blank=False)

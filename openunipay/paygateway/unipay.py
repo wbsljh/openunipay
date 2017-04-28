@@ -8,12 +8,13 @@ from openunipay.models import OrderItem, PAY_WAY_WEIXIN, PAY_WAY_ALI
 from openunipay.paygateway import weixin, alipay, PayResult
 from openunipay import exceptions, logger
 from openunipay.util import datetime
+from openunipay import business
     
 _PAY_GATEWAY = {PAY_WAY_WEIXIN:weixin.WeiXinPayGateway(),
                 PAY_WAY_ALI:alipay.AliPayGateway(), }
 
 @transaction.atomic
-def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, user=None, attach=None, expire=1440):
+def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, user=None, attach=None, expire=1440, user_to=None):
     '''
     @summary: create order
     @param orderno: order no
@@ -32,6 +33,7 @@ def create_order(orderno, payway, clientIp, product_desc, product_detail, fee, u
     orderItemObj = OrderItem()
     orderItemObj.orderno = orderno
     orderItemObj.user = user
+    orderItemObj.user_to = user_to 
     orderItemObj.product_desc = product_desc
     orderItemObj.product_detail = product_detail
     orderItemObj.fee = fee
@@ -87,6 +89,7 @@ def _update_order_pay_result(payResult):
         orderItemObj.lapsed = False
         orderItemObj.dt_pay = datetime.local_now()
         orderItemObj.save()
+        business.process_business(orderItemObj)
     elif payResult.Lapsed:
         orderItemObj = OrderItem.objects.get(orderno=payResult.OrderNo)
         orderItemObj.paied = False
